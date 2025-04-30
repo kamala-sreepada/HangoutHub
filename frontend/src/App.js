@@ -5,6 +5,7 @@ import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { enUS } from 'date-fns/locale';
+import {useParams} from 'react-router-dom';
 
 function Home() {
   const [message, setMessage] = useState('');
@@ -92,6 +93,8 @@ function Home() {
 }
 
 function CreateSession(){
+  const [hangoutName, setHangoutName] = useState('');
+  const [description, setDescription] = useState('');
   const [range, setRange] = useState([
     {
       startDate: new Date(),
@@ -100,6 +103,23 @@ function CreateSession(){
     }
   ]);
   const backHome = "< Back to Home";
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const hangoutData = {
+      name: hangoutName,
+      description: description,
+      startDate: range[0].startDate,
+      endDate: range[0].endDate,
+    };
+    console.log('Form submitted:', hangoutData);
+
+  // Later: You can POST hangoutData to backend here
+
+    navigate('/hangout/12345'); // temporary dummy ID
+  };
+  
 
   return(
     <div class="font-lato items-center px-96 pt-6 py-3 bg-gradient-to-t from-gray-200 to-white min-h-screen">
@@ -110,14 +130,16 @@ function CreateSession(){
       <div class="mt-2 border-2 border-gray-300 shadow-lg rounded-lg p-6 pb-3 bg-white">
         <h1 class="font-bold text-2xl">Create a New Hangout</h1>
         <h2 class="text-gray-600">Enter some basic details for your group hangout</h2>
-        <form class="mt-4" id="create_hangout_form">
+        <form class="mt-4" id="create_hangout_form" onSubmit={handleSubmit}>
           <div>
             <label for="hangout_name">Hangout Name <font color="red">*</font></label><br/>
-            <input type="text" id="hangout_name" name="hangout_name" class="border p-2 m-1 rounded w-full" placeholder="Picnic Hangout" required/>
+            <input type="text" id="hangout_name" name="hangout_name" value={hangoutName} onChange={(e) => setHangoutName(e.target.value)}
+              class="border p-2 m-1 rounded w-full" placeholder="Picnic Hangout" required/>
           </div>
           <div class="mt-2">
             <label for="hangout_description">Description (Optional)</label><br/>
-            <input type="text" id="hangout_description" name="hangout_description" class="border p-2 m-1 rounded w-full pb-14" placeholder="Let's plan something fun for the weekend!"/>
+            <input type="text" id="hangout_description" name="hangout_description" value={description} onChange={(e) => setDescription(e.target.value)}
+             class="border p-2 m-1 rounded w-full pb-14" placeholder="Let's plan something fun for the weekend!"/>
           </div>
           <div class="mt-2">
             <label for="date_range">Possible Date Range <font color="red">*</font></label><br/>
@@ -168,7 +190,7 @@ function JoinSession(){
             <h2 class="text-sm text-gray-600">We'll use this to send you calender invites</h2>
           </div>
           <div>
-            <button type="submit" class="mx-5 float-right px-6 py-2.5 rounded-lg bg-black text-white hover:bg-gray-800">Join Hangout</button>
+            <button type="submit" class="mx-5 float-right px-6 py-2.5 rounded-lg bg-black text-white hover:bg-gray-800" >Join Hangout</button>
           </div>
           </form>
       </div>
@@ -187,7 +209,7 @@ function Login(){
         </a>
         <div class="shadow-lg mt-3 border-2 border-gray-300 rounded-lg p-6 pb-14 bg-white">
           <h1 class="font-bold text-2xl text-center">Welcome Back!</h1>
-          <h2 class="text-gray-600 text-center">Login to your account</h2>
+          <h2 class="text-gray-600 text-center">Don't have an account? <a href="/signup" class="underline">Sign Up</a> </h2>
           <form class="mt-4" id="login_form">
             <div>
               <label for="username">Username <font color="red">*</font></label><br/>
@@ -242,6 +264,220 @@ function SignUp(){
   )
 }
 
+function HangoutPage(){
+  const { id } = useParams(); // Get the hangout ID from the URL
+  const [hangout, setHangout] = useState(null);
+  const [copied, setCopied] = useState(false);
+
+  const sharingLink = `https://hangouthub.vercel.app/join/${id}`;
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/hangout/${id}`)
+      .then((res) => res.json())
+      .then((data) => setHangout(data))
+      .catch((error) => console.error('Error fetching hangout data:', error));
+  }, [id]); 
+  
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(sharingLink);
+      setCopied(true)
+      setTimeout(() => setCopied(false), 3000);
+    } catch (err) {
+      console.error('Failed to copy!', err);
+    }
+  };
+  const [activeTab, setActiveTab] = useState();
+
+  return(
+    <div class="font-lato">
+      {/* once we get backend in place */}
+      {/* <h1 className="text-4xl font-bold">{hangout.name}</h1> */}
+      {/* <p className="mt-2">{hangout.description}</p> */}
+      <div class="flex">
+        {/* Left side */}
+        <div>
+          <h3 class="text-3xl font-bold mt-10 ml-10">Hangout Name</h3>
+          {/* <p className="mt-2 text-sm text-gray-600">{hangout.startDate} to {hangout.endDate}</p> */}
+          <p class="text-gray-500 ml-10 mt-1">May 1-5, 2025</p>
+        </div>
+        {/* Right side */}
+        <div class="ml-[40rem] flex items-end mt-3 text-sm">
+          <div class="border p-2 rounded-lg flex space-x-1 items-center">
+            {/* dummy url for now */}
+            <p>{sharingLink}</p>
+            <button onClick={handleCopy}>
+              <img class="size-5 mt-0.5"src="https://img.icons8.com/?size=100&id=pNYOTp5DinZ3&format=png&color=000000"></img>
+            </button>
+          </div>
+          <div>
+            <button class="space-x-3 flex items-center bg-black text-white hover:bg-gray-800 px-4 py-2 rounded-lg ml-8">
+              <div>
+                <img src="https://img.icons8.com/?size=100&id=84042&format=png&color=FFFFFF" class="size-5"></img>
+              </div>
+              <div>
+                Invite Friends
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="ml-[70rem] h-5 flex items-center">
+        <span className="text-gray-700 text-sm font-semibold transition-opacity duration-300" style={{ opacity: copied ? 1 : 0 }}>
+          Copied!
+        </span>
+      </div>
+      
+      <div>
+        {/* Main part here */}
+        <div class="border m-10 rounded-lg mt-10">
+          <div class="p-3">
+            <h3 class="text-2xl font-semibold">Plan Your Hangout</h3>
+            <p class="text-gray-500">Collaborate with your friends to decide what to do, where to go, and when to meet</p>
+          </div>
+          
+          {/* Tabs */}
+          <div className="flex mt-6 bg-gray-100 rounded-lg overflow-hidden">
+            {['Activities', 'Locations', 'Availability', 'Itinerary'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 py-2 text-sm font-semibold ${
+                  activeTab === tab ? 'bg-white border-b-2 border-black' : 'text-gray-500'
+                }`}>
+                {tab}
+              </button>
+            ))}
+          </div>
+          <div className="mt-8">
+            {activeTab === 'Activities' && <ActivitiesTab />}
+            {activeTab === 'Locations' && <LocationsTab />}
+            {activeTab === 'Availability' && <AvailabilityTab />}
+            {activeTab === 'Itinerary' && <ItineraryTab />}
+          </div>
+        </div>
+      </div>
+    </div>
+      
+)}
+
+function ActivitiesTab() {
+  const [activityInput, setActivityInput] = useState('');
+  const [activities, setActivities] = useState([
+    { id: 1, title: 'Hiking at the national park', votes: 3 },
+    { id: 2, title: 'Board game night', votes: 1 },
+    { id: 3, title: 'Dinner at a nice restaurant', votes: 2 },
+  ]);
+  const [votedActivities, setVotedActivities] = useState([]);
+
+  const handleAddActivity = () => {
+    if (activityInput.trim() !== '') {
+      setActivities((prevActivities) => [
+        ...prevActivities,
+        { id: Date.now(), title: activityInput, votes: 0 }
+      ].sort((a, b) => b.votes - a.votes));
+      setActivityInput('');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddActivity();
+    }
+  };
+
+  const toggleVote = (id) => {
+    setActivities((prevActivities) => {
+      const updatedActivities = prevActivities.map(activity =>
+        activity.id === id ? { ...activity, votes: activity.votes + (votedActivities.includes(id) ? -1 : 1) } : activity
+      );
+      return updatedActivities.sort((a, b) => b.votes - a.votes);
+    });
+
+    setVotedActivities((prevVoted) =>
+      prevVoted.includes(id)
+        ? prevVoted.filter(voteId => voteId !== id)
+        : [...prevVoted, id]
+    );
+  };
+
+  return (
+    <div class="px-4 font-lato">
+      <div>
+        <h2 class="text-xl font-bold">Suggest Activities</h2>
+        <p class="text-gray-500 mt-0.5">Add activities that you and your friends can do together</p>
+      </div>
+      <div class="flex items-center mb-6">
+        <input
+          type="text"
+          value={activityInput}
+          onChange={(e) => setActivityInput(e.target.value)}
+          onKeyUp={handleKeyPress}
+          placeholder="Add a new activity..."
+          class="border rounded-lg w-full p-2"
+        />
+        <button
+          onClick={handleAddActivity}
+          class="bg-black text-white p-2 rounded-lg ml-2 flex items-center"
+        >
+          <span class="text-lg">+</span> <span class="ml-1">Add</span>
+        </button>
+      </div>
+      <div>
+        <div class="space-y-4">
+          {activities.map((activity) => (
+            <div
+              key={activity.id}
+              class="flex justify-between items-center border p-3 rounded-lg shadow-sm"
+            >
+              <span class="text-gray-800">{activity.title}</span>
+              <div class="flex items-center space-x-2">
+                <span class="text-gray-600"><b>{activity.votes} votes</b></span>
+                <button
+                  onClick={() => toggleVote(activity.id)}
+                  className={`px-2 py-1 rounded-lg ${
+                    votedActivities.includes(activity.id)
+                      ? 'bg-blue-200 text-white hover:bg-gray-300 text-black'
+                      : 'bg-gray-500 hover:bg-gray-600 text-white'
+                  }`}
+                >
+                  {votedActivities.includes(activity.id) ? 'Unvote' : 'Vote'}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LocationsTab() {
+  return (
+    <div class="flex justify-center items-center">
+      {/* I was unable to get the API key cause i didnt want to do a free trial 
+      With the Google Maps API, we can pull nearby places, but this one simply shows college park haha*/}
+      <iframe
+        width="80%"
+        height="650px"
+        frameborder="0"
+        style={{ border: 0 }}
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyB2NIWI3Tv9iDPrlnowr_0ZqZWoAQydKJU&q=University%20of%20Maryland%2C%20College%20Park%2C%20College%20Park%2C%20MD%2C%20USA&maptype=roadmap"
+        allowfullscreen
+      ></iframe>
+    </div>
+  );
+}
+
+function AvailabilityTab() {
+  return <div>Availability</div>;
+}
+
+function ItineraryTab() {
+  return <div>Itinerary</div>;
+}
+
 function App(){
   return(
     <Routes>
@@ -250,6 +486,7 @@ function App(){
     <Route path="/session/join" element={<JoinSession />} />
     <Route path="/login" element={<Login />} />
     <Route path="/signup" element={<SignUp />} />
+    <Route path="/hangout/:id" element={<HangoutPage />} />
   </Routes>)
 }
 
