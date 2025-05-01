@@ -92,6 +92,8 @@ function Home() {
   )
 }
 
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+
 function CreateSession(){
   const [hangoutName, setHangoutName] = useState('');
   const [description, setDescription] = useState('');
@@ -117,9 +119,8 @@ function CreateSession(){
 
   // Later: You can POST hangoutData to backend here
 
-    navigate('/hangout/12345'); // temporary dummy ID
+    navigate('/hangout/{12345}'); // temporary dummy ID
   };
-  
 
   return(
     <div class="font-lato items-center px-96 pt-6 py-3 bg-gradient-to-t from-gray-200 to-white min-h-screen">
@@ -161,6 +162,8 @@ function CreateSession(){
   )
 }
 
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+
 function JoinSession(){
   const backHome = "< Back to Home";
 
@@ -170,7 +173,7 @@ function JoinSession(){
       <a href="/" class="flex items-center">
         <h1 class="mx-20 mtext-gray-500 hover:text-black">{backHome}</h1>
       </a>
-      <div class="mx-20 mt-2 border-2 border-gray-300 shadow-lg rounded-lg p-6 pb-14">
+      <div class="mx-20 mt-2 border-2 border-gray-300 bg-white shadow-lg rounded-lg p-6 pb-14">
         <h1 class="font-bold text-2xl">Join a Hangout</h1>
         <h2 class="text-gray-600">Enter the hangout code or use the invite link you received</h2>
         <form class="mt-4" id="create_hangout_form">
@@ -180,11 +183,11 @@ function JoinSession(){
           </div>
           <div class="mt-2">
             <label for="your_name">Your Name <font color="red">*</font></label><br/>
-            <input type="text" id="your_name" name="your_name" class="border p-2 m-1 rounded w-full pb-14" placeholder="Enter your name" required/>
+            <input type="text" id="your_name" name="your_name" class="border p-2 m-1 rounded w-full" placeholder="Enter your name" required/>
           </div>    
           <div class="mt-2">
             <label for="your_email">Email Address <font color="red">*</font></label><br/>
-            <input type="text" id="your_email" name="your_email" class="border p-2 m-1 rounded w-full pb-14" placeholder="Enter your email" required/>
+            <input type="text" id="your_email" name="your_email" class="border p-2 m-1 rounded w-full" placeholder="Enter your email" required/>
           </div>  
           <div>
             <h2 class="text-sm text-gray-600">We'll use this to send you calender invites</h2>
@@ -197,6 +200,8 @@ function JoinSession(){
     </div>
   )
 }
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------
 
 function Login(){
   const backHome = "< Back to Home";
@@ -217,7 +222,7 @@ function Login(){
             </div>
             <div class="mt-2">
               <label for="password">Password <font color="red">*</font></label><br/>
-              <input type="text" id="password" name="password" class="border p-2 m-1 rounded w-full" placeholder="Enter password" required/>
+              <input type="password" id="password" name="password" class="border p-2 m-1 rounded w-full" placeholder="Enter password" required/>
             </div>    
             <div>
               <button type="submit" class="mx-5 mt-1 float-right px-6 py-2 rounded-lg bg-black text-white hover:bg-gray-800">Login</button>
@@ -228,6 +233,8 @@ function Login(){
     </div>
   )
 }
+
+// ---------------------------------------------------------------------------------------------------------------------------------------------
 
 function SignUp(){
   const backHome = "< Back to Home";
@@ -252,7 +259,7 @@ function SignUp(){
             </div>
             <div class="mt-2">
               <label for="password">Password <font color="red">*</font></label><br/>
-              <input type="text" id="password" name="password" class="border p-2 m-1 rounded w-full" placeholder="Enter password" required/>
+              <input type="password" id="password" name="password" class="border p-2 m-1 rounded w-full" placeholder="Enter password" required/>
             </div>    
             <div>
               <button type="submit" class="mx-5 mt-1 float-right px-6 py-2 rounded-lg bg-black text-white hover:bg-gray-800">Login</button>
@@ -263,11 +270,13 @@ function SignUp(){
     </div>
   )
 }
+// ---------------------------------------------------------------------------------------------------------------------------------------------
 
 function HangoutPage(){
   const { id } = useParams(); // Get the hangout ID from the URL
   const [hangout, setHangout] = useState(null);
   const [copied, setCopied] = useState(false);
+  const backHome = "< Back to Home";
 
   const sharingLink = `https://hangouthub.vercel.app/join/${id}`;
 
@@ -297,7 +306,10 @@ function HangoutPage(){
       <div class="flex">
         {/* Left side */}
         <div>
-          <h3 class="text-3xl font-bold mt-10 ml-10">Hangout Name</h3>
+          <a href="/" class="flex items-center">
+            <h1 class="text-gray-500 hover:text-black ml-10 mt-8">{backHome}</h1>
+          </a>
+          <h3 class="text-3xl font-bold ml-10">Hangout Name</h3>
           {/* <p className="mt-2 text-sm text-gray-600">{hangout.startDate} to {hangout.endDate}</p> */}
           <p class="text-gray-500 ml-10 mt-1">May 1-5, 2025</p>
         </div>
@@ -338,7 +350,7 @@ function HangoutPage(){
           
           {/* Tabs */}
           <div className="flex mt-6 bg-gray-100 rounded-lg overflow-hidden">
-            {['Activities', 'Locations', 'Availability', 'Itinerary'].map((tab) => (
+            {['Events Near You', 'Activities', 'Locations', 'Itinerary'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -352,7 +364,7 @@ function HangoutPage(){
           <div className="mt-8">
             {activeTab === 'Activities' && <ActivitiesTab />}
             {activeTab === 'Locations' && <LocationsTab />}
-            {activeTab === 'Availability' && <AvailabilityTab />}
+            {activeTab === 'Events Near You' && <EventsNearYou />}
             {activeTab === 'Itinerary' && <ItineraryTab />}
           </div>
         </div>
@@ -470,13 +482,100 @@ function LocationsTab() {
   );
 }
 
-function AvailabilityTab() {
-  return <div>Availability</div>;
+function EventsNearYou() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [city, setCity] = useState('');
+  const [keyword, setKeyword] = useState('');
+  const [searchedCity, setSearchedCity] = useState('');
+
+  const fetchEvents = async () => {
+    if (!city || !keyword) return;
+
+    setLoading(true);
+    const apiKey = '0W3qyM6GyAbqVDGcbbTXgZVZp2hxb3m8';
+    const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${apiKey}&city=${encodeURIComponent(city)}&keyword=${encodeURIComponent(keyword)}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const eventsData = data._embedded?.events || [];
+      setEvents(eventsData);
+      setSearchedCity(city); // update label to show the searched city
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      setEvents([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="px-4 py-4">
+      <h2 className="text-xl font-bold mb-2">Find Local Events</h2>
+      <div className="flex flex-col md:flex-row gap-2 mb-4">
+        <input
+          type="text"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="Enter a city (ex: New York)"
+          className="border rounded-lg p-2 w-full"
+        />
+        <input
+          type="text"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="Enter keyword (ex: music)"
+          className="border rounded-lg p-2 w-full"
+        />
+        <button
+          onClick={fetchEvents}
+          className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
+        >
+          Search
+        </button>
+      </div>
+
+      {loading ? (
+        <p>Loading events...</p>
+      ) : searchedCity ? (
+        <div>
+          <h3 className="text-lg font-semibold mb-3">
+            Events in {searchedCity} for "{keyword}"
+          </h3>
+          {events.length === 0 ? (
+            <p>No events found.</p>
+          ) : (
+            <ul className="space-y-4">
+              {events.map((event) => (
+                <li key={event.id} className="border rounded-lg p-4 shadow-sm">
+                  <strong className="text-lg">{event.name}</strong><br />
+                  Date: {event.dates?.start?.localDate || 'N/A'}<br />
+                  Venue: {event._embedded?.venues?.[0]?.name || 'N/A'}<br />
+                  <a
+                    href={event.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    More Info
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
 }
+
+  
 
 function ItineraryTab() {
   return <div>Itinerary</div>;
 }
+
 
 function App(){
   return(
