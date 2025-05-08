@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from flask_login import current_user, login_required, login_user, logout_user
-from models import User, Session
+from flask_app.models import User, Session
 import string
 import random
 
@@ -15,7 +15,7 @@ def generate_id(length=6):
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
-@routes.route("/", method=['GET'])
+@routes.route("/", methods=['GET'])
 def home():
     return jsonify({'message': 'Welcome to Hangout hub'})
 

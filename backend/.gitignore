@@ -1,0 +1,8 @@
+backend/venv/
+
+# Top-level .gitignore
+**/venv/
+*.pyc
+__pycache__/
+node_modules/
+.env

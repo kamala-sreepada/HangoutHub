@@ -20,6 +20,7 @@ function Home() {
   return (
     // TODO: Add logo
     <div className="font-lato bg-gradient-to-t from-gray-200 to-white min-h-screen">
+      <h1>{message}</h1>
       {/* Navbar */}
       <nav className="flex justify-between items-center px-8 py-3 bg-white shadow-sm">
         {/* Left side of the navbar */}
