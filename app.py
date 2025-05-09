@@ -9,7 +9,7 @@ app = create_app()
 # CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # Set a secret key for session management
-app.config['SECRET_KEY'] = 'your-secret-key-here'
+# app.config['SECRET_KEY'] = 'your-secret-key-here'
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

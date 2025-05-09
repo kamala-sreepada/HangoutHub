@@ -20,7 +20,12 @@ def create_app(test_config=None):
     bcrypt.init_app(app)
     CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
-    from backend.flask_app.routes import routes
-    app.register_blueprint(routes)
-    
+    from backend.flask_app.routes.users import user
+    app.register_blueprint(user)
+
+    from backend.flask_app.routes.sessions import session
+    app.register_blueprint(session, url_prefix="/session")
+
+    login_manager.login_view = "users.login"
+
     return app

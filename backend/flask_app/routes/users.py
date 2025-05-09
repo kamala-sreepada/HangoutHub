@@ -7,23 +7,18 @@ import string
 import random
 
 
-routes = Blueprint('users', __name__)
+user = Blueprint('users', __name__)
 
 
-# code generator method
-def generate_id(length=6):
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
-
-
-@routes.route("/", methods=['GET'])
+@user.route("/", methods=['GET'])
 def home():
     return jsonify({'message': 'Welcome to Hangout hub'})
 
 
-@routes.route("/signup", methods = ["GET", "POST"])
+@user.route("/signup", methods = ["GET", "POST"])
 def signup():
-    # if current_user.is_authenticated:
-    #     return jsonify({'message': 'Already logged in'}), 400
+    if current_user.is_authenticated:
+        return jsonify({'message': 'Already logged in'}), 400
 
     data = request.get_json(force=True, silent=True)
     print(data)
@@ -51,7 +46,7 @@ def signup():
 
     return jsonify({'message':'User registered successfully'}), 201
 
-@routes.route("/login", methods=["GET", "POST"])
+@user.route("/login", methods=["POST"])
 def login():
     if current_user.is_authenticated:
         return jsonify({'message' : 'Already logged in'}), 400
@@ -70,39 +65,13 @@ def login():
         return jsonify({'message':'Login successful'}), 200
     else:
         return jsonify({'message':'Invalid username or password'}), 401
-    
 
-@routes.route('/session/create', methods=['POST'])
+@user.route('/dashboard', methods=['GET'])
 @login_required
-def create_session():
-    data = request.get_json()
-    hangout_name = data.get('name')
-    hangout_description = data.get('description')
-    start_date = data.get('startDate')
-    end_date = data.get('endDate')
-    
-    if not hangout_name or not start_date or not end_date:
-        return jsonify({'message': 'Missing fields to create session'}), 400
-    
-    while True:
-        id = generate_id()
-        existing = Session.objects(id=id).first()
-        if not existing:
-            break
-    
-    session = Session(
-        name = hangout_name,
-        id = id,
-        description =  hangout_description,
-        start_date = start_date,
-        end_date = end_date,
-        participants = []
-    )
-    session.save()
+def dashboard():
+    return jsonify({'message': 'Welcome to your dashboard', 'username': current_user.username}), 200
 
-    return jsonify({'message' : 'Hangout session created', 'id': id}), 201    
-
-@routes.route('/logout')
+@user.route('/logout')
 @login_required
 def logout():
     logout_user()

@@ -12,8 +12,8 @@ class User(db.Document, UserMixin):
     email = db.EmailField(unique=True, required=True)
     password = db.StringField(required=True)
 
-    # def get_id(self):
-    #     return self.username
+    def get_id(self):
+        return self.username
     
     meta = {
         'collection' : 'users'
