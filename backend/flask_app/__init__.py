@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import os
 
-db = MongoEngine()
+db = MongoEngine('mongodb+srv://vkataria:qwerty123@hangouthub.3tpmprg.mongodb.net/hangoutHub?retryWrites=true&w=majority&appName=hangoutHub')
 login_manager = LoginManager()
 bcrypt = Bcrypt()
 
