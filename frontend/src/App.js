@@ -19,7 +19,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/')
+    fetch('https://hangouthub.onrender.com/')
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((error) => setMessage('Error: Could not connect to Flask backend'));
@@ -177,67 +177,6 @@ function CreateSession(){
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-// function JoinSession(){
-//   const [hangoutName, setHangoutName] = useState('');
-//   const [description, setDescription] = useState('');
-//   const [range, setRange] = useState([]);
-//   const backHome = "< Back to Home";
-//   const navigate = useNavigate();
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const hangoutData = {
-//       name: hangoutName,
-//       description: description,
-//       startDate: range[0].startDate,
-//       endDate: range[0].endDate,
-//     };
-//     console.log('Form submitted:', hangoutData);
-
-//   // Later: You can POST hangoutData to backend here
-
-//     navigate('/hangout/12345'); // temporary dummy ID
-//   };
-
-//   return(
-//     <div class="font-lato items-center px-96 pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">
-      
-//       <a href="/dashboard" class="flex items-center">
-//         <h1 class="mx-20 mtext-gray-500 hover:text-black">{backHome}</h1>
-//       </a>
-//       <div class="mx-20 mt-2 border-2 border-gray-300 bg-white shadow-lg rounded-lg p-6 pb-14">
-//         <h1 class="font-bold text-2xl">Join a Hangout</h1>
-//         <h2 class="text-gray-600">Enter the hangout code or use the invite link you received</h2>
-//         <form class="mt-4" id="create_hangout_form" onClick={handleSubmit}>
-//           <div>
-//             <label for="hangout_code">Hangout Code <font color="red">*</font></label><br/>
-//             <input type="text" id="hangout_code" name="hangout_code" class="border p-2 m-1 rounded w-full" placeholder="Enter code (ex: ABC123)" value={globalCode} required/>
-//           </div>
-//           <div class="mt-2">
-//             <label for="your_name">Your Name <font color="red">*</font></label><br/>
-//             <input type="text" id="your_name" name="your_name" class="border p-2 m-1 rounded w-full" placeholder="Enter your name" required/>
-//           </div>    
-//           <div class="mt-2">
-//             <label for="your_email">Email Address <font color="red">*</font></label><br/>
-//             <input type="text" id="your_email" name="your_email" class="border p-2 m-1 rounded w-full" placeholder="Enter your email" required/>
-//           </div>  
-//           <div>
-//             <h2 class="text-sm text-gray-600">We'll use this to send you calender invites</h2>
-//           </div>
-//           <div>
-//             <button type="submit" class="mx-5 float-right px-6 py-2.5 rounded-lg bg-black text-white hover:bg-gray-800" >Join Hangout</button>
-//           </div>
-//         </form>
-          
-//           <div>
-//             <h2 className="text-sm text-gray-600">We'll use this to send you calendar invites</h2>
-//           </div>
-
-//       </div>
-//     </div>
-//   )
-// }
-
 function JoinSession(){
   const backHome = "< Back to Home";
   const navigate = useNavigate();
@@ -298,7 +237,7 @@ function Login(){
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch('https://hangouthub.onrender.com/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -376,7 +315,7 @@ function LoggedinHome() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:5000/logout', {
+      const response = await fetch('https://hangouthub.onrender.com/logout', {
         method: 'GET',
         credentials: 'include',
       });
@@ -394,7 +333,7 @@ function LoggedinHome() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5000/')
+    fetch('https://hangouthub.onrender.com/')
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
       .catch((error) => setMessage('Error: Could not connect to Flask backend'));
@@ -492,7 +431,7 @@ function SignUp() {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:5000/signup', {
+      const response = await fetch('https://hangouthub.onrender.com/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -588,7 +527,7 @@ function HangoutPage(){
   const sharingLink = `https://hangouthub.vercel.app/join/${id}`;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/hangout/${id}`)
+    fetch(`https://hangouthub.onrender.com/session/${id}`)
       .then((res) => res.json())
       .then((data) => setHangout(data))
       .catch((error) => console.error('Error fetching hangout data:', error));

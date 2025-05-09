@@ -18,7 +18,7 @@ def create_app(test_config=None):
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
-    CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
+    CORS(app, supports_credentials=True, origins=["https://hangouthub-koky.onrender.com/"])
 
     from backend.flask_app.routes.users import user
     app.register_blueprint(user)
