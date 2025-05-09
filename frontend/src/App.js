@@ -252,16 +252,19 @@ function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     try {
       const response = await fetch('http://localhost:5000/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         setMessage('Account created successfully!');
-        navigate('/login'); // Redirect to login page
+        // setFormData({ username: '', email: '', password: '' });
+        // navigate('/login'); // Redirect to login page
       } else {
         const errorData = await response.json();
         setMessage(errorData.message || 'Sign-up failed. Please try again.');
@@ -270,6 +273,7 @@ function SignUp() {
       setMessage('Error: Unable to connect to the server.');
     }
   };
+  console.log("FormData being sent:", formData);
 
   return (
     <div className="font-lato items-center px-[30rem] pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">

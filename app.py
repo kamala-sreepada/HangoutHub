@@ -6,7 +6,7 @@ from backend.flask_app import create_app
 app = create_app()
 
 # Enable CORS for all routes with proper configuration
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+# CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 # Set a secret key for session management
 app.config['SECRET_KEY'] = 'your-secret-key-here'

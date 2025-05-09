@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from flask_login import current_user, login_required, login_user, logout_user
-from flask_app.models import User, Session
+from backend.flask_app.models import User, Session
 import string
 import random
 
@@ -25,7 +25,11 @@ def signup():
     # if current_user.is_authenticated:
     #     return jsonify({'message': 'Already logged in'}), 400
 
-    data = request.get_json()
+    data = request.get_json(force=True, silent=True)
+    print(data)
+    if data is None:
+        return jsonify({'message': 'Invalid or missing JSON in request body'}), 400
+    
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
@@ -33,16 +37,17 @@ def signup():
     if not username or not email or not password:
         return jsonify({'message': 'Missing Fields'}), 400
     
-    if User.objects(username=username).first():
-        return jsonify({'message': 'Username already exists'}), 400
+    # if User.objects(username=username).first():
+    #     return jsonify({'message': 'Username already exists'}), 400
     
-    if User.objects(email=email).first():
-        return jsonify({'message':'Email already exists'}), 400
+    # if User.objects(email=email).first():
+    #     return jsonify({'message':'Email already exists'}), 400
     
 
-    hashed = generate_password_hash(password)
-    user = User(username=username, email=email, password=hashed)
-    user.save()
+    # hashed = generate_password_hash(password)
+    users = User(username=username, email=email, password=password)
+    # print("User", user.username, user.email, user.password)
+    users.save()
 
     return jsonify({'message':'User registered successfully'}), 201
 
