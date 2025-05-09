@@ -129,7 +129,7 @@ function CreateSession(){
       <a href="/" class="flex items-center">
         <h1 class="text-gray-500 hover:text-black">{backHome}</h1>
       </a>
-      <div class="mt-2 border-2 border-gray-300 shadow-lg rounded-lg p-6 pb-3 bg-white">
+      <div class="mt-2 border-2 border-gray-300 shadow-lg rounded-lg p-6 pb-8 bg-white">
         <h1 class="font-bold text-2xl">Create a New Hangout</h1>
         <h2 class="text-gray-600">Enter some basic details for your group hangout</h2>
         <form class="mt-4" id="create_hangout_form" onSubmit={handleSubmit}>
@@ -155,7 +155,7 @@ function CreateSession(){
             />
           </div>
           <div>
-            <button type="submit" class="-m-10 mx-5 float-right px-6 py-2.5 rounded-lg bg-black text-white hover:bg-gray-800">Create Hangout</button>
+            <button type="submit" class="-mt-5 float-right px-6 py-2.5 rounded-lg bg-black text-white hover:bg-gray-800">Create Hangout</button>
           </div>
           </form>
       </div>
@@ -207,6 +207,8 @@ function JoinSession(){
 function Login(){
   const backHome = "< Back to Home";
 
+  
+
   return(
     <div class="font-lato items-center px-[30rem] pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">
       <div class="my-32">
@@ -237,40 +239,102 @@ function Login(){
 
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 
-function SignUp(){
+function SignUp() {
   const backHome = "< Back to Home";
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  return(
-    <div class="font-lato items-center px-[30rem] pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">
-      <div class="my-32">
-        <a href="/" class="flex items-center">
-          <h1 class="text-gray-500 hover:text-black">{backHome}</h1>
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5000/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setMessage('Account created successfully!');
+        navigate('/login'); // Redirect to login page
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Sign-up failed. Please try again.');
+      }
+    } catch (error) {
+      setMessage('Error: Unable to connect to the server.');
+    }
+  };
+
+  return (
+    <div className="font-lato items-center px-[30rem] pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">
+      <div className="my-32">
+        <a href="/" className="flex items-center">
+          <h1 className="text-gray-500 hover:text-black">{backHome}</h1>
         </a>
-        <div class="shadow-lg mt-3 border-2 border-gray-300 rounded-lg p-6 pb-14 bg-white">
-          <h1 class="font-bold text-2xl text-center">Create an account</h1>
-          <h2 class="text-gray-600 text-center">Already have an account? <a href="/login" class="underline">Login</a></h2>
-          <form class="mt-4" id="login_form">
+        <div className="shadow-lg mt-3 border-2 border-gray-300 rounded-lg p-6 pb-14 bg-white">
+          <h1 className="font-bold text-2xl text-center">Create an account</h1>
+          <h2 className="text-gray-600 text-center">
+            Already have an account? <a href="/login" className="underline">Login</a>
+          </h2>
+          {message && <p className="text-center text-red-500">{message}</p>}
+          <form className="mt-4" id="signup_form" onSubmit={handleSubmit}>
             <div>
-              <label for="username">Username <font color="red">*</font></label><br/>
-              <input type="text" id="username" name="username" class="border p-2 m-1 rounded w-full" placeholder="Enter username" required/>
+              <label htmlFor="username">Username <font color="red">*</font></label><br />
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="border p-2 m-1 rounded w-full"
+                placeholder="Enter username"
+                required
+              />
             </div>
-            <div class="mt-2">
-              <label for="email">Email Address <font color="red">*</font></label><br/>
-              <input type="text" id="email" name="email" class="border p-2 m-1 rounded w-full" placeholder="Enter email id" required/>
+            <div className="mt-2">
+              <label htmlFor="email">Email Address <font color="red">*</font></label><br />
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="border p-2 m-1 rounded w-full"
+                placeholder="Enter email id"
+                required
+              />
             </div>
-            <div class="mt-2">
-              <label for="password">Password <font color="red">*</font></label><br/>
-              <input type="password" id="password" name="password" class="border p-2 m-1 rounded w-full" placeholder="Enter password" required/>
-            </div>    
+            <div className="mt-2">
+              <label htmlFor="password">Password <font color="red">*</font></label><br />
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="border p-2 m-1 rounded w-full"
+                placeholder="Enter password"
+                required
+              />
+            </div>
             <div>
-              <button type="submit" class="mx-5 mt-1 float-right px-6 py-2 rounded-lg bg-black text-white hover:bg-gray-800">Login</button>
+              <button type="submit" className="mx-5 mt-1 float-right px-6 py-2 rounded-lg bg-black text-white hover:bg-gray-800">
+                Sign Up
+              </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }
+
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 
 function HangoutPage(){
