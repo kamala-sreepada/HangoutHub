@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from backend.flask_app import create_app
+import os
 
 # Create the Flask application using the factory function
 app = create_app()
@@ -12,4 +13,6 @@ app = create_app()
 # app.config['SECRET_KEY'] = 'your-secret-key-here'
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5000)) 
+    app.run(host='0.0.0.0', port=port, debug=True)
+    # app.run(debug=True, port=5000)
