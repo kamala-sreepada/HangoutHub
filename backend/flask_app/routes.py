@@ -44,20 +44,20 @@ def signup():
     #     return jsonify({'message':'Email already exists'}), 400
     
 
-    # hashed = generate_password_hash(password)
-    users = User(username=username, email=email, password=password)
+    hashed = generate_password_hash(password)
+    users = User(username=username, email=email, password=hashed)
     # print("User", user.username, user.email, user.password)
     users.save()
 
     return jsonify({'message':'User registered successfully'}), 201
 
-
-@routes.route("/login", methods=["POST"])
+@routes.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
         return jsonify({'message' : 'Already logged in'}), 400
     
     data = request.get_json()
+    print("Data: ", data)
     username = data.get('username')
     password = data.get('password')
 
@@ -100,10 +100,7 @@ def create_session():
     )
     session.save()
 
-    return jsonify({'message' : 'Hangout sessoin created', 'id': id}), 201
-
-
-    
+    return jsonify({'message' : 'Hangout session created', 'id': id}), 201    
 
 @routes.route('/logout')
 @login_required

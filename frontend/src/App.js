@@ -168,6 +168,34 @@ function CreateSession(){
 function JoinSession(){
   const backHome = "< Back to Home";
 
+  const [formData, setFormData] = useState({ hangout_code: '', name: '', email: '' });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('http://localhost:5000/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setMessage('Joined!');
+        // setFormData({ username: '', email: '', password: '' });
+        // navigate('/login'); // Redirect to login page
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Invite code not found.');
+      }
+    } catch (error) {
+      setMessage('Error: Unable to connect to the server.');
+    }
+  };  
+
   return(
     <div class="font-lato items-center px-96 pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">
       
@@ -206,8 +234,33 @@ function JoinSession(){
 
 function Login(){
   const backHome = "< Back to Home";
+  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setMessage('Login successful!');
+        // setFormData({ username: '', email: '', password: '' });
+        // navigate('/login'); // Redirect to login page
+      } else {
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      setMessage('Error: Unable to connect to the server.');
+    }
+  };  
 
   return(
     <div class="font-lato items-center px-[30rem] pt-10 bg-gradient-to-t from-gray-200 to-white min-h-screen">
@@ -218,14 +271,34 @@ function Login(){
         <div class="shadow-lg mt-3 border-2 border-gray-300 rounded-lg p-6 pb-14 bg-white">
           <h1 class="font-bold text-2xl text-center">Welcome Back!</h1>
           <h2 class="text-gray-600 text-center">Don't have an account? <a href="/signup" class="underline">Sign Up</a> </h2>
-          <form class="mt-4" id="login_form">
+          {message && <p className="text-center text-red-500">{message}</p>}
+          <form class="mt-4" id="login_form" onSubmit={handleSubmit}>
             <div>
               <label for="username">Username <font color="red">*</font></label><br/>
-              <input type="text" id="username" name="username" class="border p-2 m-1 rounded w-full" placeholder="Enter username" required/>
+              <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  className="border p-2 m-1 rounded w-full"
+                  placeholder="Enter username"
+                  required
+                />
             </div>
             <div class="mt-2">
               <label for="password">Password <font color="red">*</font></label><br/>
-              <input type="password" id="password" name="password" class="border p-2 m-1 rounded w-full" placeholder="Enter password" required/>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="border p-2 m-1 rounded w-full"
+                placeholder="Enter password"
+                required
+              />
+
             </div>    
             <div>
               <button type="submit" class="mx-5 mt-1 float-right px-6 py-2 rounded-lg bg-black text-white hover:bg-gray-800">Login</button>
