@@ -20,10 +20,10 @@ def home():
     return jsonify({'message': 'Welcome to Hangout hub'})
 
 
-@routes.route("/signup", methods = ["POST"])
+@routes.route("/signup", methods = ["GET", "POST"])
 def signup():
-    if current_user.is_authenticated:
-        return jsonify({'message': 'Already logged in'}), 400
+    # if current_user.is_authenticated:
+    #     return jsonify({'message': 'Already logged in'}), 400
 
     data = request.get_json()
     username = data.get('username')
