@@ -63,4 +63,4 @@ Then visit http://localhost:5000 in your browser.
 
 --
 
-*Built by Kamala Shreepada and Virali Kataria.*
+*Built by Kamala Sreepada and Virali Kataria.*
