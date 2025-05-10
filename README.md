@@ -3,7 +3,7 @@
 **The ultimate platform to plan your next hangout!**
 Gather your friends and seamlessly coordinate everything from meeting time and location to activities and a detailed itinerary — we’ve got you covered!
 
-**🔗 Live Site: ** [Hangouthub] (https://hangouthub-koky.onrender.com/login)
+🔗 **Live Site:**  [Hangouthub] (https://hangouthub-koky.onrender.com/login)
 
 ---
 
@@ -44,7 +44,7 @@ npm start
 ```
 Then visit http://localhost:3000 in your browser.
 
-**Running the Flask back end: **
+**Running the Flask back end:**
 In a seperate terminal run the following:
 ```bash
 cd backend
