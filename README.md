@@ -3,7 +3,7 @@
 **The ultimate platform to plan your next hangout!**
 Gather your friends and seamlessly coordinate everything from meeting time and location to activities and a detailed itinerary — we’ve got you covered!
 
-🔗 **Live Site:**  [Hangouthub] (https://hangouthub-koky.onrender.com/login)
+🔗 **Live Site:**  [HangoutHub](https://hangouthub-koky.onrender.com/login)
 
 ---
 
