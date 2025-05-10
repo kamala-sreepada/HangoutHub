@@ -13,10 +13,10 @@ Gather your friends and seamlessly coordinate everything from meeting time and l
 
 ✅ Choose locations, times, and activities
 
-✅ Create a detialed itinerary
+✅ Create a detailed itinerary
 
 
-##📝 Project Information
+## 📝 Project Information
 
 - This repository includes:
   - ✅ Final writeup
